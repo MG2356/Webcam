@@ -1,0 +1,28 @@
+<html>
+  <head>
+    <script>
+      navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+        .then(stream => {
+          document.querySelector('#localVideo').srcObject = stream;
+          
+          const peerConnection = new RTCPeerConnection();
+          
+          stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
+          
+          peerConnection.createOffer()
+            .then(offer => peerConnection.setLocalDescription(offer))
+            .then(() => {
+             
+            });
+          
+          peerConnection.ontrack = ({ streams: [remoteStream] }) => {
+            document.querySelector('#remoteVideo').srcObject = remoteStream;
+          };
+        });
+    </script>
+  </head>
+  <body>
+    <video id="localVideo" autoplay></video>
+    <video id="remoteVideo" autoplay></video>
+  </body>
+</html>
